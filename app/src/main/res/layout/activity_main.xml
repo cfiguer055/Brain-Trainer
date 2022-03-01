@@ -90,6 +90,7 @@
             android:text=""
             android:textColor="@color/black"
             android:textSize="55dp"
+            android:tag="1"
             app:cornerRadius="0dp"
             app:layout_column="0"
             app:layout_row="0" />
@@ -104,6 +105,7 @@
             android:text=""
             android:textColor="@color/black"
             android:textSize="55dp"
+            android:tag="2"
             app:cornerRadius="0dp"
             app:layout_column="1"
             app:layout_row="0" />
@@ -118,12 +120,13 @@
             android:text=""
             android:textColor="@color/black"
             android:textSize="55dp"
+            android:tag="3"
             app:cornerRadius="0dp"
             app:layout_column="0"
             app:layout_row="1" />
 
         <Button
-            android:id="@+id/option14"
+            android:id="@+id/option4"
             android:layout_width="190dp"
             android:layout_height="90dp"
             android:backgroundTint="@android:color/holo_green_light"
@@ -132,6 +135,7 @@
             android:text=""
             android:textColor="@color/black"
             android:textSize="55dp"
+            android:tag="4"
             app:cornerRadius="0dp"
             app:layout_column="1"
             app:layout_row="1" />
@@ -150,20 +154,21 @@
         android:visibility="invisible"/>
 
     <Button
-        android:id="@+id/button19"
+        android:id="@+id/playAgain"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:backgroundTint="@android:color/darker_gray"
         android:insetTop="3dp"
         android:insetBottom="3dp"
+        android:onClick="go"
         android:text="PLAY AGAIN"
         android:textColor="@android:color/black"
+        android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/gameOverTextView"
-        android:visibility="invisible"/>
+        app:layout_constraintTop_toBottomOf="@+id/gameOverTextView" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
