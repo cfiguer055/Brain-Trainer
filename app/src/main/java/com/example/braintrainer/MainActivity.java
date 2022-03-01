@@ -16,8 +16,8 @@ public class MainActivity extends AppCompatActivity {
     Button goButton; //default: invisible
     TextView timerTextView, questionTextView, scoreTextView; //default: visible
     Button option1, option2, option3, option4; //default: visible
-    TextView gameOverTextView; //default: invisible
-    Button playAgain; //default: invisible
+    TextView gameStatus; //default: visible
+    Button playAgain; //default: visible
 
     CountDownTimer countDownTimer;
 
@@ -27,9 +27,16 @@ public class MainActivity extends AppCompatActivity {
 
     boolean gameInProgress = false;
 
+    //generateQuestion()
     int firstNum, secondNum;
     int opNum;
     String operator = "";
+
+    //generateAnswer()
+    int correctAnswer;
+    int wrongAnswer1, wrongAnswer2, wrongAnswer3;
+    int answerTag1, answerTag2, answerTag3, answerTag4;
+    int correctTag;
 
     int totalQuestions = 0, numCorrect = 0;
 
@@ -47,6 +54,9 @@ public class MainActivity extends AppCompatActivity {
             option3.setVisibility(View.VISIBLE);
             option4.setVisibility(View.VISIBLE);
 
+            gameStatus.setVisibility(View.VISIBLE);
+            playAgain.setVisibility(View.VISIBLE);
+
         } else {
             timerTextView.setVisibility(View.INVISIBLE);
             questionTextView.setVisibility(View.INVISIBLE);
@@ -57,7 +67,16 @@ public class MainActivity extends AppCompatActivity {
             option3.setVisibility(View.INVISIBLE);
             option4.setVisibility(View.INVISIBLE);
 
+            gameStatus.setVisibility(View.INVISIBLE);
+            playAgain.setVisibility(View.INVISIBLE);
+
         }
+    }
+
+
+    private void updateScore() {
+
+        scoreTextView.setText(String.valueOf(numCorrect) + "/" + String.valueOf(totalQuestions));
     }
 
 
@@ -67,43 +86,59 @@ public class MainActivity extends AppCompatActivity {
 
         //1=+, 2=-, 3=*, 4=%
         opNum = rand.nextInt(4) + 1;
+        Log.i("operator: ", String.valueOf(opNum));
 
         if(opNum == 1) {
             firstNum = rand.nextInt(500);
             secondNum = rand.nextInt(500);
             operator = "+";
+            Log.i("first, second, op: ", String.valueOf(firstNum) + ", " +  String.valueOf(secondNum) + ", " + String.valueOf(operator));
 
         } else if(opNum == 2) {
             secondNum = rand.nextInt(1000);
             firstNum = rand.nextInt(1000 - secondNum) + secondNum;
             operator = "-";
+            Log.i("first, second, op: ", String.valueOf(firstNum) + ", " + String.valueOf(secondNum) + ", " + String.valueOf(operator));
 
         } else if(opNum == 3) {
             firstNum = rand.nextInt(31);
             secondNum = rand.nextInt(32);
             operator = "*";
+            Log.i("first, second, op: ", String.valueOf(firstNum) + ", " + String.valueOf(secondNum) + ", " + String.valueOf(operator));
 
-        } else /*operator == 4*/{
-            firstNum = rand.nextInt(1000);
+        } else if(opNum == 4) {
 
             do {
-                secondNum = rand.nextInt();
-            } while(firstNum % secondNum != 0);
+                firstNum = rand.nextInt(900) + 101;
+                Log.i("first num: ", String.valueOf(firstNum));
+            } while(firstNum % 2 != 0 && firstNum % 5 != 0);
+
+            if(firstNum % 2 == 0 && firstNum % 5 != 0) {
+                do {
+                    secondNum = rand.nextInt(100) + 1;
+                    Log.i("second num: ", String.valueOf(secondNum));
+                } while (secondNum % 2 != 0 || firstNum % secondNum != 0);
+            } else {
+                do {
+                    secondNum = rand.nextInt(100) + 1;
+                    Log.i("second num: ", String.valueOf(secondNum));
+                } while (secondNum % 5 != 0 || firstNum % secondNum != 0);
+            }
+
             operator = "%";
+            Log.i("first, second, op: ", String.valueOf(firstNum) + ", " + String.valueOf(secondNum) + ", " + String.valueOf(operator));
+
         }
 
         Log.i("generate numbers to be calculated: ", "PASS");
 
         questionTextView.setText(firstNum + " " + operator + " " + secondNum);
-        //generateAnswers(firstNum, secondNum, opNum);
+
+        generateAnswers(firstNum, secondNum, opNum);
     }
 
 
     public void generateAnswers(int num1, int num2, int op) {
-        int correctAnswer;
-        int wrongAnswer1, wrongAnswer2, wrongAnswer3;
-        int answerTag1, answerTag2, answerTag3, answerTag4;
-        int correctTag;
 
         boolean identicalNum = true;
 
@@ -112,77 +147,40 @@ public class MainActivity extends AppCompatActivity {
         if(op == 1) {
             correctAnswer = num1 + num2;
 
-            do {
-                wrongAnswer1 = (int) (((double) num1 * rand.nextDouble()) + ((double) num1 * rand.nextDouble()));
-                wrongAnswer2 = (int) (((double) num1 * rand.nextDouble()) + ((double) num1 * rand.nextDouble()));
-                wrongAnswer3 = (int) (((double) num1 * rand.nextDouble()) + ((double) num1 * rand.nextDouble()));
-                Log.i("ca, wa1, wa2, wa3: ", correctAnswer + " " + wrongAnswer1 + " " + wrongAnswer2 + " " + wrongAnswer3);
-                identicalNum = identicalNum(correctAnswer, wrongAnswer1, wrongAnswer2, wrongAnswer3);
-            } while(identicalNum);
-
         } else if(op == 2) {
             correctAnswer = num1 - num2;
-
-            do {
-                wrongAnswer1 = (int) (((double) num1 * rand.nextDouble()) - ((double) num1 * rand.nextDouble()));
-                wrongAnswer2 = (int) (((double) num1 * rand.nextDouble()) - ((double) num1 * rand.nextDouble()));
-                wrongAnswer3 = (int) (((double) num1 * rand.nextDouble()) - ((double) num1 * rand.nextDouble()));
-                Log.i("ca, wa1, wa2, wa3: ", correctAnswer + " " + wrongAnswer1 + " " + wrongAnswer2 + " " + wrongAnswer3);
-                identicalNum = identicalNum(correctAnswer, wrongAnswer1, wrongAnswer2, wrongAnswer3);
-            } while(identicalNum);
 
         } else if(op == 3) {
             correctAnswer = num1 * num2;
 
-            do {
-                wrongAnswer1 = (int) (((double) num1 * rand.nextDouble()) * ((double) num1 * rand.nextDouble()));
-                wrongAnswer2 = (int) (((double) num1 * rand.nextDouble()) * ((double) num1 * rand.nextDouble()));
-                wrongAnswer3 = (int) (((double) num1 * rand.nextDouble()) * ((double) num1 * rand.nextDouble()));
-                Log.i("ca, wa1, wa2, wa3: ", correctAnswer + " " + wrongAnswer1 + " " + wrongAnswer2 + " " + wrongAnswer3);
-                identicalNum = identicalNum(correctAnswer, wrongAnswer1, wrongAnswer2, wrongAnswer3);
-            } while(identicalNum);
-
         } else /*op == 4*/{
             correctAnswer = num1 / num2;
 
-            do {
-                wrongAnswer1 = (int) (((double) num1 * rand.nextDouble()) / ((double) num1 * rand.nextDouble()));
-                wrongAnswer2 = (int) (((double) num1 * rand.nextDouble()) / ((double) num1 * rand.nextDouble()));
-                wrongAnswer3 = (int) (((double) num1 * rand.nextDouble()) / ((double) num1 * rand.nextDouble()));
-                Log.i("ca, wa1, wa2, wa3: ", correctAnswer + " " + wrongAnswer1 + " " + wrongAnswer2 + " " + wrongAnswer3);
-                identicalNum = identicalNum(correctAnswer, wrongAnswer1, wrongAnswer2, wrongAnswer3);
-            } while(identicalNum);
-
         }
-        identicalNum = true;
+
+        do {
+            wrongAnswer1 = rand.nextInt(1000);
+            wrongAnswer2 = rand.nextInt(1000);
+            wrongAnswer3 = rand.nextInt(1000);
+            Log.i("ca, wa1, wa2, wa3: ", correctAnswer + " " + wrongAnswer1 + " " + wrongAnswer2 + " " + wrongAnswer3);
+            identicalNum = identicalNum(correctAnswer, wrongAnswer1, wrongAnswer2, wrongAnswer3);
+        } while(identicalNum);
 
         Log.i("generate correct and wrong answers ", "PASS");
 
-        do {
-            answerTag1 = rand.nextInt(4) + 1;
-            answerTag2 = rand.nextInt(4) + 1;
-            answerTag3 = rand.nextInt(4) + 1;
-            answerTag4 = rand.nextInt(4) + 1;
-            Log.i("a1, a3, a3, a4: ", answerTag1 + " " + answerTag2 + " " + answerTag3 + " " + answerTag4);
-
-            identicalNum = identicalNum(answerTag1, answerTag2, answerTag3, answerTag4);
-        } while(identicalNum);
-
-        Log.i("ensure answers are placed in different tags: ", "PASS");
-
         correctTag = rand.nextInt(4) + 1;
 
-        if(correctTag == answerTag1) {
+        if(correctTag == 1) {
             option1.setText(String.valueOf(correctAnswer));
             option2.setText(String.valueOf(wrongAnswer1));
             option3.setText(String.valueOf(wrongAnswer2));
             option4.setText(String.valueOf(wrongAnswer3));
-        } else if(correctTag == answerTag2) {
+        } else if(correctTag == 2) {
             option1.setText(String.valueOf(wrongAnswer1));
             option2.setText(String.valueOf(correctAnswer));
             option3.setText(String.valueOf(wrongAnswer2));
             option4.setText(String.valueOf(wrongAnswer3));
-        } else if(correctTag == answerTag3) {
+        } else if(correctTag == 3) {
             option1.setText(String.valueOf(wrongAnswer1));
             option2.setText(String.valueOf(wrongAnswer2));
             option3.setText(String.valueOf(correctAnswer));
@@ -213,37 +211,113 @@ public class MainActivity extends AppCompatActivity {
         return false;
     }
 
-
+    //its a button...no need to call method
     public void chooseAnswer(View view) {
+        int selectedAnswer;
 
+        Button selectedButton = (Button) view;
 
+        selectedAnswer = Integer.parseInt(String.valueOf(selectedButton.getTag()));
+
+        if(selectedAnswer == correctTag) {
+            numCorrect++;
+            gameStatus.setText("Correct!");
+        } else {
+            gameStatus.setText("Wrong :(");
+        }
+
+        totalQuestions++;
+        updateScore();
+        //resetNums();
         generateQuestion();
+        //generateAnswers(firstNum, secondNum, opNum);
+    }
+
+
+    public void resetNums() {
+        //generateQuestion()
+        firstNum = 0;
+        secondNum = 0;
+        opNum = 0;
+        operator = "";
+
+        //generateAnswer()
+        correctAnswer = 0;
+        wrongAnswer1 = 0;
+        wrongAnswer2 = 0;
+        wrongAnswer3 = 0;
+        answerTag1 = 0;
+        answerTag2 = 0;
+        answerTag3 = 0;
+        answerTag4 = 0;
+        correctTag = 0;
+
+        numCorrect = 0;
+        totalQuestions = 0;
+    }
+
+
+    public void answerClickability() {
+        if(gameInProgress) {
+            option1.setEnabled(true);
+            option2.setEnabled(true);
+            option3.setEnabled(true);
+            option4.setEnabled(true);
+        } else {
+            option1.setEnabled(false);
+            option2.setEnabled(false);
+            option3.setEnabled(false);
+            option4.setEnabled(false);
+        }
+    }
+
+
+    public void resetTimer() {
+
+        resetNums();
+        updateScore();
+        timerTextView.setText("30s");
+        gameStatus.setText("Done!");
+        countDownTimer.cancel();
+        gameInProgress = false;
+        playAgain.setText("PLAY AGAIN");
+        answerClickability();
     }
 
 
     public void go(View view) {
 
-        goButton.setVisibility(View.INVISIBLE);
-        gameSetVisibility(true);
+        if(gameInProgress) {
+            gameInProgress = false;
+            answerClickability();
+            resetTimer();
+        } else {
 
-        gameInProgress = true;
+            gameInProgress = true;
+            gameStatus.setText("");
+            answerClickability();
+            goButton.setVisibility(View.INVISIBLE);
+            gameSetVisibility(true);
+            playAgain.setText("RESET");
+            generateQuestion();
 
-        generateQuestion();
-        generateAnswers(firstNum, secondNum, opNum);
+            countDownTimer = new CountDownTimer(30000 + 100, 1000) {
+                @Override
+                public void onTick(long l) {
+                    Log.i("Seconds Left!", String.valueOf(l / 1000));
+                    timerTextView.setText(String.valueOf((int) l / 1000) + "s");
+                }
 
-        countDownTimer = new CountDownTimer(30000 + 100, 1000) {
-            @Override
-            public void onTick(long l) {
-                Log.i("Seconds Left!", String.valueOf(l / 1000));
-                timerTextView.setText(String.valueOf((int) l / 1000));
-            }
-
-            @Override
-            public void onFinish() {
-                gameInProgress = false;
-            }
-        }.start();
-
+                @Override
+                public void onFinish() {
+                    gameInProgress = false;
+                    gameStatus.setText("Done!");
+                    answerClickability();
+                    //resetTimer();
+                    gameInProgress = true;
+                }
+            }.start();
+        }
     }
 
 
@@ -264,8 +338,8 @@ public class MainActivity extends AppCompatActivity {
         option3 = (Button) findViewById(R.id.option3);
         option4 = (Button) findViewById(R.id.option4);
 
-        gameOverTextView = (TextView) findViewById(R.id.gameOverTextView);
-        playAgain = (Button) findViewById(R.id.playAgain);
+        gameStatus = (TextView) findViewById(R.id.gameStatusTextView);
+        playAgain = (Button) findViewById(R.id.resetTimer);
 
         gameSetVisibility(false);
 

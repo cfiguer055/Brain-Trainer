@@ -25,8 +25,8 @@
 
     <TextView
         android:id="@+id/timerTextView"
-        android:layout_width="80dp"
-        android:layout_height="60dp"
+        android:layout_width="91dp"
+        android:layout_height="59dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:background="@android:color/holo_orange_light"
@@ -51,8 +51,8 @@
 
     <TextView
         android:id="@+id/scoreTextView"
-        android:layout_width="80dp"
-        android:layout_height="60dp"
+        android:layout_width="115dp"
+        android:layout_height="59dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
         android:background="@android:color/holo_blue_bright"
@@ -87,10 +87,11 @@
             android:backgroundTint="@android:color/holo_red_light"
             android:insetTop="0dp"
             android:insetBottom="0dp"
+            android:onClick="chooseAnswer"
+            android:tag="1"
             android:text=""
             android:textColor="@color/black"
             android:textSize="55dp"
-            android:tag="1"
             app:cornerRadius="0dp"
             app:layout_column="0"
             app:layout_row="0" />
@@ -102,10 +103,11 @@
             android:backgroundTint="@android:color/holo_purple"
             android:insetTop="0dp"
             android:insetBottom="0dp"
+            android:onClick="chooseAnswer"
+            android:tag="2"
             android:text=""
             android:textColor="@color/black"
             android:textSize="55dp"
-            android:tag="2"
             app:cornerRadius="0dp"
             app:layout_column="1"
             app:layout_row="0" />
@@ -117,10 +119,11 @@
             android:backgroundTint="@android:color/holo_blue_light"
             android:insetTop="0dp"
             android:insetBottom="0dp"
+            android:onClick="chooseAnswer"
+            android:tag="3"
             android:text=""
             android:textColor="@color/black"
             android:textSize="55dp"
-            android:tag="3"
             app:cornerRadius="0dp"
             app:layout_column="0"
             app:layout_row="1" />
@@ -132,29 +135,31 @@
             android:backgroundTint="@android:color/holo_green_light"
             android:insetTop="0dp"
             android:insetBottom="0dp"
+            android:onClick="chooseAnswer"
+            android:tag="4"
             android:text=""
             android:textColor="@color/black"
             android:textSize="55dp"
-            android:tag="4"
             app:cornerRadius="0dp"
             app:layout_column="1"
             app:layout_row="1" />
     </androidx.gridlayout.widget.GridLayout>
 
     <TextView
-        android:id="@+id/gameOverTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:id="@+id/gameStatusTextView"
+        android:layout_width="247dp"
+        android:layout_height="67dp"
         android:layout_marginBottom="240dp"
-        android:text="Done!"
+        android:gravity="center"
+        android:text=""
         android:textSize="45dp"
+        android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        android:visibility="invisible"/>
+        app:layout_constraintStart_toStartOf="parent" />
 
     <Button
-        android:id="@+id/playAgain"
+        android:id="@+id/resetTimer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
@@ -162,13 +167,13 @@
         android:insetTop="3dp"
         android:insetBottom="3dp"
         android:onClick="go"
-        android:text="PLAY AGAIN"
+        android:text="RESET"
         android:textColor="@android:color/black"
-        android:visibility="invisible"
+        android:visibility="visible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/gameOverTextView" />
+        app:layout_constraintTop_toBottomOf="@+id/gameStatusTextView" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
